@@ -34,7 +34,7 @@ A premium, visually stunning implementation of Tic-Tac-Toe featuring a **Soft UI
 - **Score Tracking:** Persistent score counters for both Player and AI.
 
 ## How to Play
-1. **Launch:** Open the link in any modern web browser.
+1. **Launch:** Open the [link](https://prezvious.github.io/tic-tac-toe/) in any modern web browser.
 2. **Settings:** Click the "Game Settings" button to customize your experience:
    - **Mode:** Switch between playing yourself or watching the AI battle.
    - **Style:** Select one of the 9 themes by clicking the circular swatches.
