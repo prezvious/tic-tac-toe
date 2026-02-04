@@ -1,0 +1,784 @@
+/* =============================================
+   NEUMORPHIC TIC-TAC-TOE
+   Premium Soft UI Design System with 9 Themes
+   ============================================= */
+
+/* =============================================
+   THEME 1: CANVAS - Radical Minimalism
+   ============================================= */
+:root,
+[data-theme="canvas"] {
+    --bg-color: #FFFFFF;
+    --surface-color: #FAFAFA;
+    --text-primary: #1A1A1A;
+    --text-secondary: #4A4A4A;
+    --text-muted: #888888;
+    --accent: #E5E5E5;
+    --accent-active: #1A1A1A;
+    --shadow-light: -6px -6px 16px rgba(255, 255, 255, 1);
+    --shadow-dark: 6px 6px 16px rgba(200, 200, 200, 0.4);
+    --shadow-inset-light: inset -3px -3px 8px rgba(255, 255, 255, 0.9);
+    --shadow-inset-dark: inset 3px 3px 8px rgba(200, 200, 200, 0.35);
+    --x-color: #1A1A1A;
+    --o-color: #666666;
+    --winner-glow: rgba(26, 26, 26, 0.15);
+    --font-primary: 'Helvetica Neue', 'Inter', sans-serif;
+}
+
+/* =============================================
+   THEME 2: AZURE - Reliable Tech
+   ============================================= */
+[data-theme="azure"] {
+    --bg-color: #F4F7FA;
+    --surface-color: #EDF2F7;
+    --text-primary: #0F172A;
+    --text-secondary: #334155;
+    --text-muted: #64748B;
+    --accent: #2D7FF9;
+    --accent-active: #1D6AD8;
+    --shadow-light: -6px -6px 16px rgba(255, 255, 255, 0.9);
+    --shadow-dark: 6px 6px 16px rgba(45, 127, 249, 0.15);
+    --shadow-inset-light: inset -3px -3px 8px rgba(255, 255, 255, 0.8);
+    --shadow-inset-dark: inset 3px 3px 8px rgba(45, 127, 249, 0.12);
+    --x-color: #2D7FF9;
+    --o-color: #0F172A;
+    --winner-glow: rgba(45, 127, 249, 0.3);
+    --font-primary: 'Roboto', 'Open Sans', sans-serif;
+}
+
+/* =============================================
+   THEME 3: AURORA - Morning Clarity (Glassmorphism)
+   ============================================= */
+[data-theme="aurora"] {
+    --bg-color: linear-gradient(135deg, #A1C4FD 0%, #C2E9FB 100%);
+    --surface-color: rgba(255, 255, 255, 0.65);
+    --text-primary: #3D4F6F;
+    --text-secondary: #5E6C84;
+    --text-muted: #8896AB;
+    --accent: #A1C4FD;
+    --accent-active: #7EB0F9;
+    --shadow-light: -6px -6px 16px rgba(255, 255, 255, 0.7);
+    --shadow-dark: 6px 6px 16px rgba(161, 196, 253, 0.35);
+    --shadow-inset-light: inset -3px -3px 8px rgba(255, 255, 255, 0.6);
+    --shadow-inset-dark: inset 3px 3px 8px rgba(161, 196, 253, 0.25);
+    --x-color: #5E8BCA;
+    --o-color: #8FAACC;
+    --winner-glow: rgba(161, 196, 253, 0.5);
+    --font-primary: 'Nunito', 'Quicksand', sans-serif;
+    --glass-blur: blur(12px);
+    --glass-border: 1px solid rgba(255, 255, 255, 0.4);
+}
+
+/* =============================================
+   THEME 4: SOLAR - Kinetic Energy
+   ============================================= */
+[data-theme="solar"] {
+    --bg-color: linear-gradient(90deg, #FF9966 0%, #FF5E62 100%);
+    --surface-color: rgba(17, 17, 17, 0.85);
+    --text-primary: #FFFFFF;
+    --text-secondary: rgba(255, 255, 255, 0.85);
+    --text-muted: rgba(255, 255, 255, 0.6);
+    --accent: #FF9966;
+    --accent-active: #FF5E62;
+    --shadow-light: -6px -6px 16px rgba(255, 153, 102, 0.3);
+    --shadow-dark: 6px 6px 16px rgba(0, 0, 0, 0.4);
+    --shadow-inset-light: inset -3px -3px 8px rgba(255, 153, 102, 0.2);
+    --shadow-inset-dark: inset 3px 3px 8px rgba(0, 0, 0, 0.35);
+    --x-color: #FF9966;
+    --o-color: #FFFFFF;
+    --winner-glow: rgba(255, 94, 98, 0.5);
+    --font-primary: 'Montserrat', 'Teko', sans-serif;
+}
+
+/* =============================================
+   THEME 5: APRICOT - Organic Warmth
+   ============================================= */
+[data-theme="apricot"] {
+    --bg-color: linear-gradient(180deg, #FFD194 0%, #D1913C 100%);
+    --surface-color: #FFF8F0;
+    --text-primary: #4A3B32;
+    --text-secondary: #6B5848;
+    --text-muted: #9A8678;
+    --accent: #D1913C;
+    --accent-active: #B87D30;
+    --shadow-light: -6px -6px 16px rgba(255, 255, 255, 0.7);
+    --shadow-dark: 6px 6px 16px rgba(209, 145, 60, 0.25);
+    --shadow-inset-light: inset -3px -3px 8px rgba(255, 255, 255, 0.6);
+    --shadow-inset-dark: inset 3px 3px 8px rgba(209, 145, 60, 0.2);
+    --x-color: #B87D30;
+    --o-color: #4A3B32;
+    --winner-glow: rgba(255, 209, 148, 0.5);
+    --font-primary: 'Merriweather', 'Lato', serif;
+}
+
+/* =============================================
+   THEME 6: DUSK - Transition & Balance
+   ============================================= */
+[data-theme="dusk"] {
+    --bg-color: linear-gradient(160deg, #708090 0%, #F4C4C2 100%);
+    --surface-color: #F0F4F8;
+    --text-primary: #2C3E50;
+    --text-secondary: #4A5568;
+    --text-muted: #718096;
+    --accent: #708090;
+    --accent-active: #5A6A7A;
+    --shadow-light: -6px -6px 16px rgba(255, 255, 255, 0.75);
+    --shadow-dark: 6px 6px 16px rgba(112, 128, 144, 0.25);
+    --shadow-inset-light: inset -3px -3px 8px rgba(255, 255, 255, 0.65);
+    --shadow-inset-dark: inset 3px 3px 8px rgba(112, 128, 144, 0.2);
+    --x-color: #708090;
+    --o-color: #D4979A;
+    --winner-glow: rgba(244, 196, 194, 0.5);
+    --font-primary: 'Playfair Display', 'Source Sans Pro', serif;
+}
+
+/* =============================================
+   THEME 7: BLUSH - Soft Romance
+   ============================================= */
+[data-theme="blush"] {
+    --bg-color: radial-gradient(circle, #FFC3A0 0%, #FFAFBD 100%);
+    --surface-color: #FFFAFA;
+    --text-primary: #885A5A;
+    --text-secondary: #A07878;
+    --text-muted: #C4A0A0;
+    --accent: #FFAFBD;
+    --accent-active: #F59CAB;
+    --shadow-light: -6px -6px 16px rgba(255, 255, 255, 0.8);
+    --shadow-dark: 6px 6px 16px rgba(255, 175, 189, 0.3);
+    --shadow-inset-light: inset -3px -3px 8px rgba(255, 255, 255, 0.7);
+    --shadow-inset-dark: inset 3px 3px 8px rgba(255, 175, 189, 0.25);
+    --x-color: #E88A9B;
+    --o-color: #885A5A;
+    --winner-glow: rgba(255, 195, 160, 0.5);
+    --font-primary: 'Josefin Sans', 'Great Vibes', sans-serif;
+}
+
+/* =============================================
+   THEME 8: VAPOR - Digital Nostalgia (Cyberpunk)
+   ============================================= */
+[data-theme="vapor"] {
+    --bg-color: linear-gradient(45deg, #DA22FF 0%, #9733EE 100%);
+    --surface-color: rgba(25, 0, 40, 0.9);
+    --text-primary: #E0AAFF;
+    --text-secondary: #C77DFF;
+    --text-muted: #9D4EDD;
+    --accent: #DA22FF;
+    --accent-active: #FF44FF;
+    --shadow-light: -6px -6px 16px rgba(218, 34, 255, 0.2);
+    --shadow-dark: 6px 6px 16px rgba(0, 0, 0, 0.5);
+    --shadow-inset-light: inset -3px -3px 8px rgba(218, 34, 255, 0.15);
+    --shadow-inset-dark: inset 3px 3px 8px rgba(0, 0, 0, 0.4);
+    --x-color: #DA22FF;
+    --o-color: #00FFFF;
+    --winner-glow: rgba(218, 34, 255, 0.6);
+    --font-primary: 'Orbitron', 'Press Start 2P', monospace;
+    --neon-glow: 0 0 10px currentColor, 0 0 20px currentColor;
+}
+
+/* =============================================
+   THEME 9: ABYSS - Premium Luxury
+   ============================================= */
+[data-theme="abyss"] {
+    --bg-color: linear-gradient(180deg, #0F2027 0%, #203A43 50%, #2C5364 100%);
+    --surface-color: rgba(15, 32, 39, 0.9);
+    --text-primary: rgba(255, 255, 255, 0.85);
+    --text-secondary: rgba(255, 255, 255, 0.7);
+    --text-muted: rgba(255, 255, 255, 0.5);
+    --accent: #2C5364;
+    --accent-active: #3D7A8C;
+    --shadow-light: -6px -6px 16px rgba(44, 83, 100, 0.3);
+    --shadow-dark: 6px 6px 16px rgba(0, 0, 0, 0.5);
+    --shadow-inset-light: inset -3px -3px 8px rgba(44, 83, 100, 0.2);
+    --shadow-inset-dark: inset 3px 3px 8px rgba(0, 0, 0, 0.4);
+    --x-color: #5DADE2;
+    --o-color: rgba(255, 255, 255, 0.85);
+    --winner-glow: rgba(93, 173, 226, 0.5);
+    --font-primary: 'Cinzel', 'Bodoni', serif;
+}
+
+/* =============================================
+   BASE STYLES
+   ============================================= */
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--font-primary, 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif);
+    margin: 0;
+    padding: 40px 20px 60px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+    background: var(--bg-color);
+    color: var(--text-primary);
+    transition: all 0.4s ease;
+}
+
+/* =============================================
+   HEADER
+   ============================================= */
+
+header {
+    text-align: center;
+    margin-bottom: 32px;
+}
+
+h1 {
+    font-weight: 700;
+    font-size: 2.5rem;
+    margin: 0;
+    color: var(--text-primary);
+    letter-spacing: -0.02em;
+}
+
+.tagline {
+    margin-top: 8px;
+    font-size: 1rem;
+    color: var(--text-secondary);
+    font-weight: 400;
+}
+
+/* =============================================
+   GAME CONTAINER
+   ============================================= */
+
+.game-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    max-width: 420px;
+    background: var(--surface-color);
+    border-radius: 32px;
+    box-shadow: var(--shadow-light), var(--shadow-dark);
+    padding: 32px 28px 36px;
+    backdrop-filter: var(--glass-blur, none);
+    border: var(--glass-border, none);
+    transition: all 0.4s ease;
+}
+
+/* =============================================
+   SCORE BOXES - CONSISTENT DESIGN
+   ============================================= */
+
+.score-container {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    margin-bottom: 24px;
+    gap: 24px;
+}
+
+.score-box {
+    flex: 1;
+    max-width: 140px;
+    text-align: center;
+    padding: 20px 24px;
+    background: var(--surface-color);
+    border-radius: 20px;
+    box-shadow: var(--shadow-light), var(--shadow-dark);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    transition: all 0.3s ease;
+}
+
+.score-box.is-active {
+    box-shadow: var(--shadow-inset-light), var(--shadow-inset-dark);
+}
+
+.score-box .label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+}
+
+.score-box .value {
+    font-size: 2.2rem;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+/* =============================================
+   STATUS & TURN INDICATOR
+   ============================================= */
+
+.status-message {
+    margin: 12px 0 8px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    min-height: 1.5em;
+}
+
+.turn-indicator {
+    font-size: 0.85rem;
+    margin-bottom: 20px;
+    padding: 8px 20px;
+    border-radius: 50px;
+    background: var(--surface-color);
+    box-shadow: var(--shadow-inset-light), var(--shadow-inset-dark);
+    color: var(--text-secondary);
+    font-weight: 500;
+}
+
+/* =============================================
+   GAME BOARD - NEUMORPHIC
+   ============================================= */
+
+.board {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+    margin-bottom: 28px;
+    background: var(--surface-color);
+    border-radius: 24px;
+    padding: 20px;
+    box-shadow: var(--shadow-inset-light), var(--shadow-inset-dark);
+    width: 100%;
+    max-width: 320px;
+}
+
+.cell {
+    aspect-ratio: 1 / 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.2rem;
+    font-weight: 700;
+    cursor: pointer;
+    background: var(--surface-color);
+    border: none;
+    border-radius: 16px;
+    box-shadow: var(--shadow-light), var(--shadow-dark);
+    transition: all 0.2s ease;
+}
+
+.cell:hover {
+    transform: translateY(-2px);
+}
+
+.cell:active {
+    box-shadow: var(--shadow-inset-light), var(--shadow-inset-dark);
+    transform: translateY(0);
+}
+
+.cell.x {
+    color: var(--x-color);
+    text-shadow: var(--neon-glow, none);
+}
+
+.cell.o {
+    color: var(--o-color);
+    text-shadow: var(--neon-glow, none);
+}
+
+.cell.winner {
+    background: linear-gradient(145deg, var(--winner-glow), transparent);
+    box-shadow: 0 0 20px var(--winner-glow), var(--shadow-light), var(--shadow-dark);
+}
+
+/* =============================================
+   BUTTONS - NEUMORPHIC PILLS
+   ============================================= */
+
+.controls {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 12px;
+    width: 100%;
+    margin-bottom: 16px;
+}
+
+button {
+    padding: 12px 20px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    border: none;
+    border-radius: 50px;
+    background: var(--surface-color);
+    color: var(--text-primary);
+    cursor: pointer;
+    box-shadow: var(--shadow-light), var(--shadow-dark);
+    transition: all 0.2s ease;
+    font-family: inherit;
+}
+
+button:hover {
+    transform: translateY(-1px);
+}
+
+button:active {
+    box-shadow: var(--shadow-inset-light), var(--shadow-inset-dark);
+    transform: translateY(0);
+}
+
+button:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+}
+
+/* =============================================
+   SETTINGS PANEL - NEUMORPHIC MODAL
+   ============================================= */
+
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(8px);
+    z-index: 999;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+}
+
+.overlay.is-visible {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.settings-panel {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0.95);
+    width: 90%;
+    max-width: 420px;
+    max-height: 80vh;
+    overflow-y: auto;
+    background: var(--surface-color);
+    border-radius: 28px;
+    box-shadow: var(--shadow-light), var(--shadow-dark),
+        0 25px 50px rgba(0, 0, 0, 0.15);
+    padding: 28px;
+    z-index: 1000;
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.3s ease;
+}
+
+.settings-panel.is-visible {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translate(-50%, -50%) scale(1);
+}
+
+.settings-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+}
+
+.settings-header h3 {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin: 0;
+}
+
+.close-settings {
+    width: 36px;
+    height: 36px;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    color: var(--text-secondary);
+    background: var(--surface-color);
+    box-shadow: var(--shadow-light), var(--shadow-dark);
+}
+
+.close-settings:hover {
+    color: var(--accent-active);
+}
+
+.settings-group {
+    margin-bottom: 24px;
+}
+
+.settings-group h3 {
+    font-size: 0.85rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 14px;
+    border: none;
+    padding: 0;
+}
+
+.theme-options,
+.difficulty-options,
+.symbol-options,
+.mode-options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: flex-start;
+}
+
+/* =============================================
+   CIRCULAR THEME SWATCHES
+   ============================================= */
+
+.theme-selector-group .theme-options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    justify-content: center;
+    padding: 8px 0;
+}
+
+.theme-swatch {
+    width: 48px;
+    height: 48px;
+    padding: 4px;
+    border: none;
+    border-radius: 50%;
+    background: transparent;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: none;
+}
+
+.theme-swatch:hover {
+    transform: scale(1.1);
+}
+
+.theme-swatch:active {
+    transform: scale(0.95);
+}
+
+.theme-swatch.active {
+    box-shadow: 0 0 0 3px var(--surface-color), 0 0 0 5px var(--text-muted);
+}
+
+.swatch-circle {
+    display: block;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* Individual theme gradient swatches */
+.swatch-canvas {
+    background: linear-gradient(180deg, #FFFFFF 0%, #E8E8E8 100%);
+}
+
+.swatch-azure {
+    background: linear-gradient(180deg, #2D7FF9 0%, #1A5FCC 100%);
+}
+
+.swatch-aurora {
+    background: linear-gradient(180deg, #A1C4FD 0%, #C2E9FB 100%);
+}
+
+.swatch-solar {
+    background: linear-gradient(180deg, #FF9966 0%, #FF5E62 100%);
+}
+
+.swatch-apricot {
+    background: linear-gradient(180deg, #FFD194 0%, #D1913C 100%);
+}
+
+.swatch-dusk {
+    background: linear-gradient(180deg, #F4C4C2 0%, #708090 100%);
+}
+
+.swatch-blush {
+    background: linear-gradient(180deg, #FFC3A0 0%, #FFAFBD 100%);
+}
+
+.swatch-vapor {
+    background: linear-gradient(180deg, #DA22FF 0%, #9733EE 100%);
+}
+
+.swatch-abyss {
+    background: linear-gradient(180deg, #2C5364 0%, #0F2027 100%);
+}
+
+.difficulty-btn,
+.symbol-btn,
+.mode-btn {
+    padding: 10px 16px;
+    font-size: 0.85rem;
+    border-radius: 50px;
+}
+
+.difficulty-btn.active,
+.symbol-btn.active,
+.mode-btn.active {
+    box-shadow: var(--shadow-inset-light), var(--shadow-inset-dark);
+    color: var(--accent-active);
+    font-weight: 700;
+}
+
+/* =============================================
+   HISTORY CONTAINER
+   ============================================= */
+
+.history-container {
+    display: none;
+    margin-top: 20px;
+    width: 100%;
+    max-height: 180px;
+    overflow-y: auto;
+    background: var(--surface-color);
+    border-radius: 20px;
+    padding: 16px;
+    box-shadow: var(--shadow-inset-light), var(--shadow-inset-dark);
+}
+
+.history-container h3 {
+    font-size: 0.85rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin: 0 0 12px 0;
+}
+
+.history-move {
+    padding: 8px 12px;
+    margin: 6px 0;
+    background: var(--surface-color);
+    border-radius: 12px;
+    box-shadow: var(--shadow-light), var(--shadow-dark);
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+}
+
+/* =============================================
+   PROGRESS BAR
+   ============================================= */
+
+.progress-container {
+    width: 180px;
+    height: 8px;
+    background: var(--surface-color);
+    box-shadow: var(--shadow-inset-light), var(--shadow-inset-dark);
+    border-radius: 50px;
+    margin: 12px auto;
+    overflow: hidden;
+    display: none;
+}
+
+.progress-container.visible {
+    display: block;
+}
+
+.progress-bar {
+    height: 100%;
+    background: var(--accent);
+    border-radius: 50px;
+    width: 0%;
+    transition: width linear;
+}
+
+/* =============================================
+   FOOTER
+   ============================================= */
+
+.footer-note {
+    margin-top: 40px;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    text-align: center;
+}
+
+/* =============================================
+   SCROLL LOCK
+   ============================================= */
+
+.no-scroll {
+    overflow: hidden;
+}
+
+/* =============================================
+   REDUCED MOTION
+   ============================================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+}
+
+/* =============================================
+   RESPONSIVE DESIGN
+   ============================================= */
+
+@media (max-width: 500px) {
+    body {
+        padding: 24px 16px 40px;
+    }
+
+    h1 {
+        font-size: 2rem;
+    }
+
+    .game-container {
+        padding: 24px 20px 28px;
+        border-radius: 28px;
+    }
+
+    .score-container {
+        gap: 16px;
+    }
+
+    .score-box {
+        padding: 16px 20px;
+    }
+
+    .score-box .value {
+        font-size: 1.8rem;
+    }
+
+    .board {
+        gap: 10px;
+        padding: 16px;
+        max-width: 280px;
+    }
+
+    .cell {
+        font-size: 1.8rem;
+        border-radius: 12px;
+    }
+
+    .controls {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    button {
+        width: 100%;
+    }
+
+    .settings-panel {
+        padding: 24px 20px;
+        border-radius: 24px;
+    }
+
+    .theme-options {
+        justify-content: center;
+    }
+}

@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tic Tac Toe</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body data-theme="canvas">
+    <header>
+        <h1 id="game-title">Tic Tac Toe</h1>
+        <p class="tagline">Challenge the AI, track your progress, and customize your play style.</p>
+    </header>
+
+    <main class="game-container" aria-labelledby="game-title">
+        <div class="score-container" role="status" aria-live="polite">
+            <div class="score-box" aria-label="Player score">
+                <span class="label">Player</span>
+                <span class="value" id="player-score">0</span>
+            </div>
+            <div class="score-box" aria-label="AI score">
+                <span class="label">AI</span>
+                <span class="value" id="ai-score">0</span>
+            </div>
+        </div>
+
+        <div class="status-message" id="status" role="status" aria-live="polite">Your turn!</div>
+        <div class="turn-indicator" id="turn-indicator" aria-live="polite"></div>
+
+        <div class="progress-container" id="restart-progress-container" aria-hidden="true">
+            <div class="progress-bar" id="restart-progress-bar"></div>
+        </div>
+
+        <div class="board" id="board" role="grid" aria-label="Tic Tac Toe board">
+            <div class="cell" data-index="0" role="gridcell" aria-label="Empty cell 1"></div>
+            <div class="cell" data-index="1" role="gridcell" aria-label="Empty cell 2"></div>
+            <div class="cell" data-index="2" role="gridcell" aria-label="Empty cell 3"></div>
+            <div class="cell" data-index="3" role="gridcell" aria-label="Empty cell 4"></div>
+            <div class="cell" data-index="4" role="gridcell" aria-label="Empty cell 5"></div>
+            <div class="cell" data-index="5" role="gridcell" aria-label="Empty cell 6"></div>
+            <div class="cell" data-index="6" role="gridcell" aria-label="Empty cell 7"></div>
+            <div class="cell" data-index="7" role="gridcell" aria-label="Empty cell 8"></div>
+            <div class="cell" data-index="8" role="gridcell" aria-label="Empty cell 9"></div>
+        </div>
+
+        <div class="controls" role="group" aria-label="Game controls">
+            <button type="button" id="settings-btn" aria-haspopup="dialog" aria-expanded="false">Game Settings</button>
+            <button type="button" id="undo-btn">Undo Move</button>
+            <button type="button" id="reset-round-btn">Reset Round</button>
+            <button type="button" id="reset-scores-btn">Reset Scores</button>
+            <button type="button" id="history-btn" aria-expanded="false">Show History</button>
+        </div>
+
+        <div class="history-container" id="history-container" aria-hidden="true">
+            <h3>Game History</h3>
+            <div id="history-list" role="log" aria-live="polite"></div>
+        </div>
+    </main>
+
+    <div class="overlay" id="overlay" aria-hidden="true"></div>
+
+    <div class="settings-panel" id="settings-panel" tabindex="-1" aria-hidden="true" role="dialog" aria-modal="true"
+        aria-labelledby="settings-title">
+        <div class="settings-header">
+            <h3 id="settings-title">Game Settings</h3>
+            <button type="button" class="close-settings" id="close-settings" aria-label="Close settings">×</button>
+        </div>
+
+        <div class="settings-group">
+            <h3>Game Mode</h3>
+            <div class="mode-options" role="group" aria-label="Game mode selection">
+                <button type="button" class="mode-btn active" data-mode="pva">Player vs AI</button>
+                <button type="button" class="mode-btn" data-mode="ava">AI vs AI</button>
+            </div>
+        </div>
+
+        <div class="settings-group theme-selector-group">
+            <h3>Select your style</h3>
+            <div class="theme-options" role="group" aria-label="Theme selection">
+                <button type="button" class="theme-swatch active" data-theme="canvas" aria-label="Canvas theme">
+                    <span class="swatch-circle swatch-canvas"></span>
+                </button>
+                <button type="button" class="theme-swatch" data-theme="azure" aria-label="Azure theme">
+                    <span class="swatch-circle swatch-azure"></span>
+                </button>
+                <button type="button" class="theme-swatch" data-theme="aurora" aria-label="Aurora theme">
+                    <span class="swatch-circle swatch-aurora"></span>
+                </button>
+                <button type="button" class="theme-swatch" data-theme="solar" aria-label="Solar theme">
+                    <span class="swatch-circle swatch-solar"></span>
+                </button>
+                <button type="button" class="theme-swatch" data-theme="apricot" aria-label="Apricot theme">
+                    <span class="swatch-circle swatch-apricot"></span>
+                </button>
+                <button type="button" class="theme-swatch" data-theme="dusk" aria-label="Dusk theme">
+                    <span class="swatch-circle swatch-dusk"></span>
+                </button>
+                <button type="button" class="theme-swatch" data-theme="blush" aria-label="Blush theme">
+                    <span class="swatch-circle swatch-blush"></span>
+                </button>
+                <button type="button" class="theme-swatch" data-theme="vapor" aria-label="Vapor theme">
+                    <span class="swatch-circle swatch-vapor"></span>
+                </button>
+                <button type="button" class="theme-swatch" data-theme="abyss" aria-label="Abyss theme">
+                    <span class="swatch-circle swatch-abyss"></span>
+                </button>
+            </div>
+        </div>
+
+
+        <div class="settings-group">
+            <h3>AI Difficulty</h3>
+            <div class="difficulty-options" role="group" aria-label="AI difficulty">
+                <button type="button" class="difficulty-btn active" data-difficulty="easy">Easy</button>
+                <button type="button" class="difficulty-btn" data-difficulty="medium">Medium</button>
+                <button type="button" class="difficulty-btn" data-difficulty="hard">Hard</button>
+            </div>
+        </div>
+
+        <div class="settings-group">
+            <h3>Player Symbol</h3>
+            <div class="symbol-options" role="group" aria-label="Choose player symbol">
+                <button type="button" class="symbol-btn active" data-symbol="X">Play as X</button>
+                <button type="button" class="symbol-btn" data-symbol="O">Play as O</button>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer-note">Built for fast play and endless customization.</footer>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
