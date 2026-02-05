@@ -316,7 +316,7 @@ document.addEventListener("DOMContentLoaded", () => {
   function getBestMove(symbolToMaximize = aiSymbol) {
     const opponentSymbol = symbolToMaximize === "X" ? "O" : "X";
 
-    function minimax(newBoard, depth, isMaximizing) {
+    function minimax(newBoard, depth, isMaximizing, alpha, beta) {
       const winner = checkWinningCondition(newBoard);
       if (winner === symbolToMaximize) return 10 - depth;
       if (winner === opponentSymbol) return depth - 10;
@@ -327,9 +327,13 @@ document.addEventListener("DOMContentLoaded", () => {
         for (let i = 0; i < 9; i++) {
           if (newBoard[i] === "") {
             newBoard[i] = symbolToMaximize;
-            const score = minimax(newBoard, depth + 1, false);
+            const score = minimax(newBoard, depth + 1, false, alpha, beta);
             newBoard[i] = "";
             bestScore = Math.max(score, bestScore);
+            alpha = Math.max(alpha, score);
+            if (beta <= alpha) {
+              break;
+            }
           }
         }
         return bestScore;
@@ -338,9 +342,13 @@ document.addEventListener("DOMContentLoaded", () => {
         for (let i = 0; i < 9; i++) {
           if (newBoard[i] === "") {
             newBoard[i] = opponentSymbol;
-            const score = minimax(newBoard, depth + 1, true);
+            const score = minimax(newBoard, depth + 1, true, alpha, beta);
             newBoard[i] = "";
             bestScore = Math.min(score, bestScore);
+            beta = Math.min(beta, score);
+            if (beta <= alpha) {
+              break;
+            }
           }
         }
         return bestScore;
@@ -373,7 +381,7 @@ document.addEventListener("DOMContentLoaded", () => {
     for (let i = 0; i < 9; i++) {
       if (board[i] === "") {
         board[i] = symbolToMaximize;
-        const score = minimax(board, 0, false);
+        const score = minimax(board, 0, false, -Infinity, Infinity);
         board[i] = "";
         if (score > bestScore) {
           bestScore = score;
