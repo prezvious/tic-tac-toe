@@ -29,6 +29,33 @@
             </div>
         </div>
 
+        <div class="stats-dashboard" id="stats-dashboard" aria-label="Statistics dashboard">
+            <div class="stat-item">
+                <span class="stat-label">Games Played</span>
+                <span class="stat-value" id="games-played">0</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-label">Wins</span>
+                <span class="stat-value" id="player-wins">0</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-label">Losses</span>
+                <span class="stat-value" id="player-losses">0</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-label">Draws</span>
+                <span class="stat-value" id="player-draws">0</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-label">Win Streak</span>
+                <span class="stat-value" id="win-streak">0</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-label">Best Streak</span>
+                <span class="stat-value" id="best-streak">0</span>
+            </div>
+        </div>
+
         <div class="status-message" id="status" role="status" aria-live="polite">Your turn!</div>
         <div class="turn-indicator" id="turn-indicator" aria-live="polite"></div>
 
@@ -119,6 +146,16 @@
                 <button type="button" class="difficulty-btn active" data-difficulty="easy">Easy</button>
                 <button type="button" class="difficulty-btn" data-difficulty="medium">Medium</button>
                 <button type="button" class="difficulty-btn" data-difficulty="hard">Hard</button>
+            </div>
+        </div>
+
+        <div class="settings-group">
+            <h3>AI Personality</h3>
+            <div class="personality-options" role="group" aria-label="AI personality selection">
+                <button type="button" class="personality-btn active" data-personality="balanced">Balanced</button>
+                <button type="button" class="personality-btn" data-personality="aggressive">Aggressive</button>
+                <button type="button" class="personality-btn" data-personality="defensive">Defensive</button>
+                <button type="button" class="personality-btn" data-personality="random">Random</button>
             </div>
         </div>
 

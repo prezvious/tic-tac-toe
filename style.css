@@ -662,6 +662,93 @@ button:focus-visible {
 }
 
 /* =============================================
+   STATS DASHBOARD
+   ============================================= */
+
+.stats-dashboard {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    width: 100%;
+    margin-bottom: 20px;
+    padding: 16px;
+    background: var(--surface-color);
+    border-radius: 20px;
+    box-shadow: var(--shadow-light), var(--shadow-dark);
+}
+
+.stat-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 12px 8px;
+    background: var(--surface-color);
+    border-radius: 12px;
+    box-shadow: var(--shadow-inset-light), var(--shadow-inset-dark);
+    transition: all 0.3s ease;
+}
+
+.stat-item:hover {
+    transform: translateY(-2px);
+}
+
+.stat-label {
+    font-size: 0.65rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 6px;
+    text-align: center;
+}
+
+.stat-value {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+/* =============================================
+   PERSONALITY BUTTONS
+   ============================================= */
+
+.personality-options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: flex-start;
+}
+
+.personality-btn {
+    padding: 10px 16px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    border: none;
+    border-radius: 50px;
+    background: var(--surface-color);
+    color: var(--text-primary);
+    cursor: pointer;
+    box-shadow: var(--shadow-light), var(--shadow-dark);
+    transition: all 0.2s ease;
+    font-family: inherit;
+}
+
+.personality-btn:hover {
+    transform: translateY(-1px);
+}
+
+.personality-btn:active {
+    box-shadow: var(--shadow-inset-light), var(--shadow-inset-dark);
+    transform: translateY(0);
+}
+
+.personality-btn.active {
+    background: var(--accent);
+    color: #FFFFFF;
+    box-shadow: var(--shadow-inset-light), var(--shadow-inset-dark);
+}
+
+/* =============================================
    PROGRESS BAR
    ============================================= */
 

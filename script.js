@@ -4,6 +4,8 @@ document.addEventListener("DOMContentLoaded", () => {
     difficulty: "ttt-difficulty",
     symbol: "ttt-symbol",
     mode: "ttt-mode",
+    personality: "ttt-personality",
+    stats: "ttt-stats",
   };
 
   const safeStorage = {
@@ -35,8 +37,19 @@ document.addEventListener("DOMContentLoaded", () => {
   let moveHistory = [];
   let gameHistory = [];
   let aiDifficulty = safeStorage.get(storageKeys.difficulty, "easy");
+  let aiPersonality = safeStorage.get(storageKeys.personality, "balanced");
   let aiMoveTimer = null; // Track the AI move timer
   let isThinking = false; // Flag to prevent multiple AI computations
+
+  // Statistics tracking
+  let stats = {
+    gamesPlayed: 0,
+    wins: 0,
+    losses: 0,
+    draws: 0,
+    winStreak: 0,
+    bestStreak: 0,
+  };
 
   const cells = document.querySelectorAll(".cell");
   const statusDisplay = document.getElementById("status");
@@ -51,10 +64,21 @@ document.addEventListener("DOMContentLoaded", () => {
   const settingsButton = document.getElementById("settings-btn");
   const overlay = document.getElementById("overlay");
 
+  // Stats dashboard elements
+  const statsDashboard = {
+    gamesPlayed: document.getElementById("games-played"),
+    wins: document.getElementById("player-wins"),
+    losses: document.getElementById("player-losses"),
+    draws: document.getElementById("player-draws"),
+    winStreak: document.getElementById("win-streak"),
+    bestStreak: document.getElementById("best-streak"),
+  };
+
   const themeButtons = document.querySelectorAll(".theme-swatch");
   const difficultyButtons = document.querySelectorAll(".difficulty-btn");
   const symbolButtons = document.querySelectorAll(".symbol-btn");
   const modeButtons = document.querySelectorAll(".mode-btn");
+  const personalityButtons = document.querySelectorAll(".personality-btn");
 
   const winningConditions = [
     [0, 1, 2],
@@ -111,11 +135,21 @@ document.addEventListener("DOMContentLoaded", () => {
       btn.addEventListener("click", () => applyMode(btn.getAttribute("data-mode")));
     });
 
+    personalityButtons.forEach((btn) => {
+      btn.addEventListener("click", () =>
+        applyPersonality(btn.getAttribute("data-personality"))
+      );
+    });
+
+    // Load saved stats
+    loadStats();
+
     // Apply stored preferences
     applyTheme(safeStorage.get(storageKeys.theme, "canvas"), { skipSave: true });
     applyDifficulty(aiDifficulty, { skipSave: true });
     applySymbol(playerSymbol, { skipSave: true, skipReset: true });
     applyMode(gameMode, { skipSave: true, skipReset: true });
+    applyPersonality(aiPersonality, { skipSave: true });
 
     resetRound(true);
   }
@@ -255,16 +289,50 @@ document.addEventListener("DOMContentLoaded", () => {
 
     let moveIndex = null;
 
-    switch (aiDifficulty) {
-      case "hard":
-        moveIndex = getBestMove(aiSymbol);
+    // Apply personality-based modifications to AI behavior
+    switch (aiPersonality) {
+      case "aggressive":
+        // Prioritize winning moves, take more risks
+        if (aiDifficulty === "hard") {
+          moveIndex = getBestMove(aiSymbol);
+        } else if (aiDifficulty === "medium") {
+          moveIndex = Math.random() < 0.8 ? getSmartMove(true) : getRandomMove();
+        } else {
+          moveIndex = Math.random() < 0.5 ? getSmartMove(true) : getRandomMove();
+        }
         break;
-      case "medium":
-        moveIndex = Math.random() < 0.7 ? getSmartMove() : getRandomMove();
+      
+      case "defensive":
+        // Prioritize blocking, play safer
+        if (aiDifficulty === "hard") {
+          moveIndex = getBestMove(aiSymbol);
+        } else if (aiDifficulty === "medium") {
+          moveIndex = Math.random() < 0.7 ? getSmartMove(false) : getRandomMove();
+        } else {
+          moveIndex = Math.random() < 0.4 ? getSmartMove(false) : getRandomMove();
+        }
         break;
-      case "easy":
+      
+      case "random":
+        // Completely random moves regardless of difficulty
+        moveIndex = getRandomMove();
+        break;
+      
+      case "balanced":
       default:
-        moveIndex = Math.random() < 0.3 ? getSmartMove() : getRandomMove();
+        // Standard behavior based on difficulty
+        switch (aiDifficulty) {
+          case "hard":
+            moveIndex = getBestMove(aiSymbol);
+            break;
+          case "medium":
+            moveIndex = Math.random() < 0.7 ? getSmartMove() : getRandomMove();
+            break;
+          case "easy":
+          default:
+            moveIndex = Math.random() < 0.3 ? getSmartMove() : getRandomMove();
+            break;
+        }
         break;
     }
 
@@ -290,23 +358,48 @@ document.addEventListener("DOMContentLoaded", () => {
     return availableMoves[Math.floor(Math.random() * availableMoves.length)];
   }
 
-  function getSmartMove() {
-    for (let i = 0; i < winningConditions.length; i++) {
-      const [a, b, c] = winningConditions[i];
-      if (board[a] === aiSymbol && board[b] === aiSymbol && board[c] === "") return c;
-      if (board[a] === aiSymbol && board[c] === aiSymbol && board[b] === "") return b;
-      if (board[b] === aiSymbol && board[c] === aiSymbol && board[a] === "") return a;
+  function getSmartMove(aggressive = null) {
+    // If aggressive is explicitly set, use it; otherwise default behavior
+    const prioritizeAttack = aggressive !== null ? aggressive : true;
+
+    if (prioritizeAttack) {
+      // First: Check for winning moves
+      for (let i = 0; i < winningConditions.length; i++) {
+        const [a, b, c] = winningConditions[i];
+        if (board[a] === aiSymbol && board[b] === aiSymbol && board[c] === "") return c;
+        if (board[a] === aiSymbol && board[c] === aiSymbol && board[b] === "") return b;
+        if (board[b] === aiSymbol && board[c] === aiSymbol && board[a] === "") return a;
+      }
+
+      // Second: Block opponent's winning moves (lower priority for aggressive)
+      for (let i = 0; i < winningConditions.length; i++) {
+        const [a, b, c] = winningConditions[i];
+        if (board[a] === playerSymbol && board[b] === playerSymbol && board[c] === "") return c;
+        if (board[a] === playerSymbol && board[c] === playerSymbol && board[b] === "") return b;
+        if (board[b] === playerSymbol && board[c] === playerSymbol && board[a] === "") return a;
+      }
+    } else {
+      // Defensive: Block first, then attack
+      for (let i = 0; i < winningConditions.length; i++) {
+        const [a, b, c] = winningConditions[i];
+        if (board[a] === playerSymbol && board[b] === playerSymbol && board[c] === "") return c;
+        if (board[a] === playerSymbol && board[c] === playerSymbol && board[b] === "") return b;
+        if (board[b] === playerSymbol && board[c] === playerSymbol && board[a] === "") return a;
+      }
+
+      // Then check for winning moves
+      for (let i = 0; i < winningConditions.length; i++) {
+        const [a, b, c] = winningConditions[i];
+        if (board[a] === aiSymbol && board[b] === aiSymbol && board[c] === "") return c;
+        if (board[a] === aiSymbol && board[c] === aiSymbol && board[b] === "") return b;
+        if (board[b] === aiSymbol && board[c] === aiSymbol && board[a] === "") return a;
+      }
     }
 
-    for (let i = 0; i < winningConditions.length; i++) {
-      const [a, b, c] = winningConditions[i];
-      if (board[a] === playerSymbol && board[b] === playerSymbol && board[c] === "") return c;
-      if (board[a] === playerSymbol && board[c] === playerSymbol && board[b] === "") return b;
-      if (board[b] === playerSymbol && board[c] === playerSymbol && board[a] === "") return a;
-    }
-
+    // Take center if available
     if (board[4] === "") return 4;
 
+    // Take corners
     const corners = [0, 2, 6, 8].filter((cornerIndex) => board[cornerIndex] === "");
     if (corners.length > 0) return corners[Math.floor(Math.random() * corners.length)];
 
@@ -422,6 +515,10 @@ document.addEventListener("DOMContentLoaded", () => {
         result: "draw",
         moves: [...moveHistory],
       });
+      // Update stats for draw (only in PvA mode)
+      if (gameMode === 'pva') {
+        updateStats("draw");
+      }
     } else {
       // Winner logic
       // If gameMode is ava: X is 'playerScore' slot, O is 'aiScore' slot (arbitrary mapping)
@@ -444,11 +541,13 @@ document.addEventListener("DOMContentLoaded", () => {
           playerScore++;
           playerScoreDisplay.textContent = playerScore;
           gameHistory.push({ result: "player win", moves: [...moveHistory] });
+          updateStats("win");
         } else {
           statusDisplay.textContent = "AI won!";
           aiScore++;
           aiScoreDisplay.textContent = aiScore;
           gameHistory.push({ result: "ai win", moves: [...moveHistory] });
+          updateStats("loss");
         }
       }
     }
@@ -699,5 +798,63 @@ document.addEventListener("DOMContentLoaded", () => {
     } else {
       updateStatusMessage();
     }
+  }
+
+  function applyPersonality(personality, { skipSave = false } = {}) {
+    aiPersonality = personality;
+    setActiveButton(personalityButtons, personality, "personality");
+    if (!skipSave) {
+      safeStorage.set(storageKeys.personality, personality);
+    }
+  }
+
+  function loadStats() {
+    try {
+      const savedStats = localStorage.getItem(storageKeys.stats);
+      if (savedStats) {
+        stats = JSON.parse(savedStats);
+      }
+    } catch (error) {
+      // Ignore errors
+    }
+    updateStatsDisplay();
+  }
+
+  function saveStats() {
+    try {
+      localStorage.setItem(storageKeys.stats, JSON.stringify(stats));
+    } catch (error) {
+      // Ignore storage errors
+    }
+  }
+
+  function updateStatsDisplay() {
+    if (statsDashboard.gamesPlayed) statsDashboard.gamesPlayed.textContent = stats.gamesPlayed;
+    if (statsDashboard.wins) statsDashboard.wins.textContent = stats.wins;
+    if (statsDashboard.losses) statsDashboard.losses.textContent = stats.losses;
+    if (statsDashboard.draws) statsDashboard.draws.textContent = stats.draws;
+    if (statsDashboard.winStreak) statsDashboard.winStreak.textContent = stats.winStreak;
+    if (statsDashboard.bestStreak) statsDashboard.bestStreak.textContent = stats.bestStreak;
+  }
+
+  function updateStats(result) {
+    stats.gamesPlayed++;
+    
+    if (result === "win") {
+      stats.wins++;
+      stats.winStreak++;
+      if (stats.winStreak > stats.bestStreak) {
+        stats.bestStreak = stats.winStreak;
+      }
+    } else if (result === "loss") {
+      stats.losses++;
+      stats.winStreak = 0;
+    } else if (result === "draw") {
+      stats.draws++;
+      stats.winStreak = 0;
+    }
+    
+    saveStats();
+    updateStatsDisplay();
   }
 });
