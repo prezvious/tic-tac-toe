@@ -595,7 +595,7 @@ button:focus-visible {
 }
 
 .swatch-dusk {
-    background: linear-gradient(180deg, #F4C4C2 0%, #708090 100%);
+    background: linear-gradient(160deg, #708090 0%, #F4C4C2 100%);
 }
 
 .swatch-blush {
