@@ -109,8 +109,6 @@ document.addEventListener("DOMContentLoaded", () => {
     [2, 4, 6], // Diagonals
   ];
 
-  initGame();
-
   // Event listener cleanup function
   let eventListeners = [];
 
@@ -129,6 +127,8 @@ document.addEventListener("DOMContentLoaded", () => {
       eventListeners.push({ element, event, handler });
     }
   }
+
+  initGame();
 
   function initGame() {
     cleanupEventListeners();
