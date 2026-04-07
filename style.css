@@ -620,7 +620,8 @@ button:focus-visible {
 
 .difficulty-btn.active,
 .symbol-btn.active,
-.mode-btn.active {
+.mode-btn.active,
+.personality-btn.active {
     box-shadow: var(--shadow-inset-light), var(--shadow-inset-dark);
     color: var(--accent-active);
     font-weight: 700;
@@ -743,8 +744,8 @@ button:focus-visible {
 }
 
 .personality-btn.active {
-    background: var(--accent);
-    color: #FFFFFF;
+    background: var(--accent-active);
+    color: var(--surface-color);
     box-shadow: var(--shadow-inset-light), var(--shadow-inset-dark);
 }
 
@@ -772,7 +773,7 @@ button:focus-visible {
     background: var(--accent);
     border-radius: 50px;
     width: 0%;
-    transition: width linear;
+    transition: width 0.3s linear;
 }
 
 /* =============================================
