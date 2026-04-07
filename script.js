@@ -14,6 +14,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const stored = localStorage.getItem(key);
         return stored !== null ? stored : fallback;
       } catch (error) {
+        console.warn(`localStorage get error for key "${key}":`, error.message);
         return fallback;
       }
     },
@@ -21,9 +22,26 @@ document.addEventListener("DOMContentLoaded", () => {
       try {
         localStorage.setItem(key, value);
       } catch (error) {
-        // Ignore storage errors (private browsing, etc.)
+        console.warn(`localStorage set error for key "${key}":`, error.message);
       }
     },
+  };
+
+  // Constants for timing and probabilities
+  const TIMING = {
+    AI_MOVE_DELAY: 500,
+    AVA_MOVE_DELAY: 800,
+    AVA_RESTART_DELAY: 3000,
+    AI_START_DELAY: 450,
+  };
+  
+  const PROBABILITIES = {
+    AGGRESSIVE_MEDIUM: 0.8,
+    AGGRESSIVE_EASY: 0.5,
+    DEFENSIVE_MEDIUM: 0.7,
+    DEFENSIVE_EASY: 0.4,
+    BALANCED_MEDIUM: 0.7,
+    BALANCED_EASY: 0.3,
   };
 
   let board = Array(9).fill("");
@@ -93,52 +111,83 @@ document.addEventListener("DOMContentLoaded", () => {
 
   initGame();
 
+  // Event listener cleanup function
+  let eventListeners = [];
+
+  function cleanupEventListeners() {
+    eventListeners.forEach(({ element, event, handler }) => {
+      if (element) {
+        element.removeEventListener(event, handler);
+      }
+    });
+    eventListeners = [];
+  }
+
+  function addEventListenerWithCleanup(element, event, handler) {
+    if (element) {
+      element.addEventListener(event, handler);
+      eventListeners.push({ element, event, handler });
+    }
+  }
+
   function initGame() {
+    cleanupEventListeners();
+    
     cells.forEach((cell) => {
       const index = Number(cell.getAttribute("data-index"));
-      cell.addEventListener("click", () => handleCellClick(cell));
+      const clickHandler = () => handleCellClick(cell);
+      addEventListenerWithCleanup(cell, "click", clickHandler);
       cell.textContent = "";
       cell.classList.remove("x", "o", "winner");
       cell.setAttribute("aria-label", `Empty cell ${index + 1}`);
     });
 
-    document.getElementById("undo-btn").addEventListener("click", undoMove);
-    document
-      .getElementById("reset-round-btn")
-      .addEventListener("click", () => resetRound());
-    document
-      .getElementById("reset-scores-btn")
-      .addEventListener("click", resetScores);
-    historyButton.addEventListener("click", toggleHistory);
-    settingsButton.addEventListener("click", () => toggleSettings());
-    document
-      .getElementById("close-settings")
-      .addEventListener("click", () => toggleSettings(false));
-    overlay.addEventListener("click", () => toggleSettings(false));
-    document.addEventListener("keydown", handleGlobalKeyDown);
+    addEventListenerWithCleanup(document.getElementById("undo-btn"), "click", undoMove);
+    addEventListenerWithCleanup(
+      document.getElementById("reset-round-btn"),
+      "click",
+      () => resetRound()
+    );
+    addEventListenerWithCleanup(
+      document.getElementById("reset-scores-btn"),
+      "click",
+      resetScores
+    );
+    addEventListenerWithCleanup(historyButton, "click", toggleHistory);
+    addEventListenerWithCleanup(settingsButton, "click", () => toggleSettings());
+    addEventListenerWithCleanup(
+      document.getElementById("close-settings"),
+      "click",
+      () => toggleSettings(false)
+    );
+    addEventListenerWithCleanup(overlay, "click", () => toggleSettings(false));
+    addEventListenerWithCleanup(document, "keydown", handleGlobalKeyDown);
 
     themeButtons.forEach((btn) => {
-      btn.addEventListener("click", () => applyTheme(btn.getAttribute("data-theme")));
+      const themeHandler = () => applyTheme(btn.getAttribute("data-theme"));
+      addEventListenerWithCleanup(btn, "click", themeHandler);
     });
 
     difficultyButtons.forEach((btn) => {
-      btn.addEventListener("click", () =>
-        applyDifficulty(btn.getAttribute("data-difficulty"))
-      );
+      const difficultyHandler = () =>
+        applyDifficulty(btn.getAttribute("data-difficulty"));
+      addEventListenerWithCleanup(btn, "click", difficultyHandler);
     });
 
     symbolButtons.forEach((btn) => {
-      btn.addEventListener("click", () => applySymbol(btn.getAttribute("data-symbol")));
+      const symbolHandler = () => applySymbol(btn.getAttribute("data-symbol"));
+      addEventListenerWithCleanup(btn, "click", symbolHandler);
     });
 
     modeButtons.forEach((btn) => {
-      btn.addEventListener("click", () => applyMode(btn.getAttribute("data-mode")));
+      const modeHandler = () => applyMode(btn.getAttribute("data-mode"));
+      addEventListenerWithCleanup(btn, "click", modeHandler);
     });
 
     personalityButtons.forEach((btn) => {
-      btn.addEventListener("click", () =>
-        applyPersonality(btn.getAttribute("data-personality"))
-      );
+      const personalityHandler = () =>
+        applyPersonality(btn.getAttribute("data-personality"));
+      addEventListenerWithCleanup(btn, "click", personalityHandler);
     });
 
     // Load saved stats
@@ -212,7 +261,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (gameActive) {
       // Clear any existing timer just in case
       if (aiMoveTimer) clearTimeout(aiMoveTimer);
-      aiMoveTimer = setTimeout(makeAiMove, 500);
+      aiMoveTimer = setTimeout(makeAiMove, TIMING.AI_MOVE_DELAY);
       isThinking = true;
       updateStatusMessage();
     }
@@ -253,29 +302,24 @@ document.addEventListener("DOMContentLoaded", () => {
   function triggerAutoPlay() {
     if (!gameActive || gameMode !== "ava") return;
 
-    // Use a delay for watchability
-    const delay = 800; // 0.8 seconds
-
+    // Clear any existing timer to prevent race conditions
     if (aiMoveTimer) clearTimeout(aiMoveTimer);
+    
     isThinking = true;
 
-    // Status update is handled by updateStatusMessage calling this, 
-    // but we can ensure message is set.
-    // statusDisplay.textContent = `System (${currentPlayer}) is thinking...`;
-
     aiMoveTimer = setTimeout(() => {
-      if (!gameActive) return;
+      // Double-check game state before making move (race condition fix)
+      if (!gameActive || gameMode !== "ava") return;
 
       // In AI vs AI, we use Minimax (getBestMove) for BOTH sides
       const moveIndex = getBestMove(currentPlayer);
 
-      if (moveIndex !== null) {
+      if (moveIndex !== null && gameActive) {
         makeMove(moveIndex, currentPlayer);
-      } else {
-        // Should verify draw/win before here, but safe fallback
-        if (checkDraw()) endGame(true);
+      } else if (gameActive && checkDraw()) {
+        endGame(true);
       }
-    }, delay);
+    }, TIMING.AVA_MOVE_DELAY);
   }
 
   function makeAiMove() {
@@ -296,9 +340,9 @@ document.addEventListener("DOMContentLoaded", () => {
         if (aiDifficulty === "hard") {
           moveIndex = getBestMove(aiSymbol);
         } else if (aiDifficulty === "medium") {
-          moveIndex = Math.random() < 0.8 ? getSmartMove(true) : getRandomMove();
+          moveIndex = Math.random() < PROBABILITIES.AGGRESSIVE_MEDIUM ? getSmartMove(true) : getRandomMove();
         } else {
-          moveIndex = Math.random() < 0.5 ? getSmartMove(true) : getRandomMove();
+          moveIndex = Math.random() < PROBABILITIES.AGGRESSIVE_EASY ? getSmartMove(true) : getRandomMove();
         }
         break;
       
@@ -307,9 +351,9 @@ document.addEventListener("DOMContentLoaded", () => {
         if (aiDifficulty === "hard") {
           moveIndex = getBestMove(aiSymbol);
         } else if (aiDifficulty === "medium") {
-          moveIndex = Math.random() < 0.7 ? getSmartMove(false) : getRandomMove();
+          moveIndex = Math.random() < PROBABILITIES.DEFENSIVE_MEDIUM ? getSmartMove(false) : getRandomMove();
         } else {
-          moveIndex = Math.random() < 0.4 ? getSmartMove(false) : getRandomMove();
+          moveIndex = Math.random() < PROBABILITIES.DEFENSIVE_EASY ? getSmartMove(false) : getRandomMove();
         }
         break;
       
@@ -326,11 +370,11 @@ document.addEventListener("DOMContentLoaded", () => {
             moveIndex = getBestMove(aiSymbol);
             break;
           case "medium":
-            moveIndex = Math.random() < 0.7 ? getSmartMove() : getRandomMove();
+            moveIndex = Math.random() < PROBABILITIES.BALANCED_MEDIUM ? getSmartMove() : getRandomMove();
             break;
           case "easy":
           default:
-            moveIndex = Math.random() < 0.3 ? getSmartMove() : getRandomMove();
+            moveIndex = Math.random() < PROBABILITIES.BALANCED_EASY ? getSmartMove() : getRandomMove();
             break;
         }
         break;
@@ -471,11 +515,14 @@ document.addEventListener("DOMContentLoaded", () => {
       return Math.floor(Math.random() * 9);
     }
 
+    // Create a copy of the board to avoid corrupting the live game state
+    const boardCopy = [...board];
+    
     for (let i = 0; i < 9; i++) {
-      if (board[i] === "") {
-        board[i] = symbolToMaximize;
-        const score = minimax(board, 0, false, -Infinity, Infinity);
-        board[i] = "";
+      if (boardCopy[i] === "") {
+        boardCopy[i] = symbolToMaximize;
+        const score = minimax(boardCopy, 0, false, -Infinity, Infinity);
+        boardCopy[i] = "";
         if (score > bestScore) {
           bestScore = score;
           bestMove = i;
@@ -530,10 +577,14 @@ document.addEventListener("DOMContentLoaded", () => {
           playerScore++;
           playerScoreDisplay.textContent = playerScore;
           gameHistory.push({ result: "X win", moves: [...moveHistory] });
+          // Update stats for AVA mode (X wins)
+          updateStats("win");
         } else {
           aiScore++;
           aiScoreDisplay.textContent = aiScore;
           gameHistory.push({ result: "O win", moves: [...moveHistory] });
+          // Update stats for AVA mode (O wins = loss for X perspective)
+          updateStats("loss");
         }
       } else { // PvA
         if (currentPlayer === playerSymbol) {
@@ -581,7 +632,7 @@ document.addEventListener("DOMContentLoaded", () => {
           progressContainer.setAttribute("aria-hidden", "true");
         }
         resetRound();
-      }, 3000);
+      }, TIMING.AVA_RESTART_DELAY);
     }
   }
 
@@ -594,11 +645,20 @@ document.addEventListener("DOMContentLoaded", () => {
     const aiMove = moveHistory.pop();
     const playerMove = moveHistory.pop();
 
+    // Store winning state before undoing
+    const wasGameActive = gameActive;
+    
     resetCell(aiMove.index);
     resetCell(playerMove.index);
 
     board[aiMove.index] = "";
     board[playerMove.index] = "";
+
+    // Restore game state properly
+    gameActive = true;
+    
+    // Remove winner highlights from all cells
+    cells.forEach(cell => cell.classList.remove("winner"));
 
     updateHistory("Moves undone");
 
@@ -657,7 +717,7 @@ document.addEventListener("DOMContentLoaded", () => {
           if (gameActive && currentPlayer === aiSymbol) {
             makeAiMove();
           }
-        }, 450);
+        }, TIMING.AI_START_DELAY);
       }
     }
 
@@ -815,7 +875,7 @@ document.addEventListener("DOMContentLoaded", () => {
         stats = JSON.parse(savedStats);
       }
     } catch (error) {
-      // Ignore errors
+      console.warn("Failed to load stats from localStorage:", error.message);
     }
     updateStatsDisplay();
   }
@@ -824,7 +884,7 @@ document.addEventListener("DOMContentLoaded", () => {
     try {
       localStorage.setItem(storageKeys.stats, JSON.stringify(stats));
     } catch (error) {
-      // Ignore storage errors
+      console.warn("Failed to save stats to localStorage:", error.message);
     }
   }
 
