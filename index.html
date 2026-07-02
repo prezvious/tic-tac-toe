@@ -4,173 +4,199 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="A fast, accessible tic-tac-toe game with AI, themes, stats, and local progress tracking.">
+    <meta name="theme-color" content="#f6f4ee" id="theme-color-meta">
     <title>Tic Tac Toe</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="icon" href="data:,">
     <link rel="stylesheet" href="style.css">
 </head>
 
 <body data-theme="canvas">
-    <header>
+    <a class="skip-link" href="#game-board">Skip to Board</a>
+
+    <header class="site-header">
+        <p class="eyebrow">Fast Strategy Game</p>
         <h1 id="game-title">Tic Tac Toe</h1>
-        <p class="tagline">Challenge the AI, track your progress, and customize your play style.</p>
+        <p class="tagline">Play the AI, watch systems compete, or settle a pass-and-play match.</p>
     </header>
 
-    <main class="game-container" aria-labelledby="game-title">
-        <div class="score-container" role="status" aria-live="polite">
-            <div class="score-box" aria-label="Player score">
-                <span class="label" id="player-label">Player</span>
-                <span class="value" id="player-score">0</span>
+    <main class="app-shell" aria-labelledby="game-title">
+        <section class="play-panel" aria-label="Game">
+            <div class="score-strip" role="status" aria-live="polite">
+                <div class="score-card" id="player-score-card">
+                    <span class="label" id="player-label">Player</span>
+                    <span class="value" id="player-score">0</span>
+                </div>
+                <div class="score-card" id="ai-score-card">
+                    <span class="label" id="ai-label">AI</span>
+                    <span class="value" id="ai-score">0</span>
+                </div>
             </div>
-            <div class="score-box" aria-label="AI score">
-                <span class="label" id="ai-label">AI</span>
-                <span class="value" id="ai-score">0</span>
-            </div>
-        </div>
 
-        <div class="stats-dashboard" id="stats-dashboard" aria-label="Statistics dashboard">
-            <div class="stat-item">
-                <span class="stat-label">Games Played</span>
-                <span class="stat-value" id="games-played">0</span>
+            <div class="status-card">
+                <div class="status-message" id="status" role="status" aria-live="polite">Your Turn</div>
+                <div class="turn-indicator" id="turn-indicator" aria-live="polite">Your move (X)</div>
             </div>
-            <div class="stat-item">
-                <span class="stat-label">Wins</span>
-                <span class="stat-value" id="player-wins">0</span>
-            </div>
-            <div class="stat-item">
-                <span class="stat-label">Losses</span>
-                <span class="stat-value" id="player-losses">0</span>
-            </div>
-            <div class="stat-item">
-                <span class="stat-label">Draws</span>
-                <span class="stat-value" id="player-draws">0</span>
-            </div>
-            <div class="stat-item">
-                <span class="stat-label">Win Streak</span>
-                <span class="stat-value" id="win-streak">0</span>
-            </div>
-            <div class="stat-item">
-                <span class="stat-label">Best Streak</span>
-                <span class="stat-value" id="best-streak">0</span>
-            </div>
-        </div>
 
-        <div class="status-message" id="status" role="status" aria-live="polite">Your turn!</div>
-        <div class="turn-indicator" id="turn-indicator" aria-live="polite"></div>
+            <div class="progress-container" id="restart-progress-container" hidden aria-hidden="true">
+                <div class="progress-bar" id="restart-progress-bar"></div>
+            </div>
 
-        <div class="progress-container" id="restart-progress-container" aria-hidden="true">
-            <div class="progress-bar" id="restart-progress-bar"></div>
-        </div>
+            <div class="board" id="game-board" role="group" aria-label="Tic Tac Toe board">
+                <button type="button" class="cell" data-cell="0" aria-label="Cell 1, empty"></button>
+                <button type="button" class="cell" data-cell="1" aria-label="Cell 2, empty"></button>
+                <button type="button" class="cell" data-cell="2" aria-label="Cell 3, empty"></button>
+                <button type="button" class="cell" data-cell="3" aria-label="Cell 4, empty"></button>
+                <button type="button" class="cell" data-cell="4" aria-label="Cell 5, empty"></button>
+                <button type="button" class="cell" data-cell="5" aria-label="Cell 6, empty"></button>
+                <button type="button" class="cell" data-cell="6" aria-label="Cell 7, empty"></button>
+                <button type="button" class="cell" data-cell="7" aria-label="Cell 8, empty"></button>
+                <button type="button" class="cell" data-cell="8" aria-label="Cell 9, empty"></button>
+            </div>
 
-        <div class="board" id="board" role="grid" aria-label="Tic Tac Toe board">
-            <div class="cell" data-index="0" role="gridcell" aria-label="Empty cell 1"></div>
-            <div class="cell" data-index="1" role="gridcell" aria-label="Empty cell 2"></div>
-            <div class="cell" data-index="2" role="gridcell" aria-label="Empty cell 3"></div>
-            <div class="cell" data-index="3" role="gridcell" aria-label="Empty cell 4"></div>
-            <div class="cell" data-index="4" role="gridcell" aria-label="Empty cell 5"></div>
-            <div class="cell" data-index="5" role="gridcell" aria-label="Empty cell 6"></div>
-            <div class="cell" data-index="6" role="gridcell" aria-label="Empty cell 7"></div>
-            <div class="cell" data-index="7" role="gridcell" aria-label="Empty cell 8"></div>
-            <div class="cell" data-index="8" role="gridcell" aria-label="Empty cell 9"></div>
-        </div>
+            <div class="primary-actions" role="group" aria-label="Round controls">
+                <button type="button" id="reset-round-btn" class="button button-primary">Reset Round</button>
+                <button type="button" id="undo-btn" class="button">Undo Move</button>
+            </div>
 
-        <div class="controls" role="group" aria-label="Game controls">
-            <button type="button" id="settings-btn" aria-haspopup="dialog" aria-expanded="false">Game Settings</button>
-            <button type="button" id="undo-btn">Undo Move</button>
-            <button type="button" id="reset-round-btn">Reset Round</button>
-            <button type="button" id="reset-scores-btn">Reset Scores</button>
-            <button type="button" id="history-btn" aria-expanded="false">Show History</button>
-        </div>
+            <div class="secondary-actions" role="group" aria-label="Game controls">
+                <button type="button" id="settings-btn" class="button button-quiet" aria-haspopup="dialog" aria-expanded="false">Game Settings</button>
+                <button type="button" id="history-btn" class="button button-quiet" aria-controls="history-container" aria-expanded="false">Show History</button>
+                <button type="button" id="reset-data-btn" class="button button-danger">Reset All Data</button>
+            </div>
+        </section>
 
-        <div class="history-container" id="history-container" aria-hidden="true">
-            <h3>Game History</h3>
-            <div id="history-list" role="log" aria-live="polite"></div>
-        </div>
+        <aside class="details-panel" aria-label="Progress and history">
+            <section class="stats-panel" aria-labelledby="stats-title">
+                <div class="panel-heading">
+                    <p class="eyebrow">Player vs AI</p>
+                    <h2 id="stats-title">Progress</h2>
+                </div>
+                <div class="stats-dashboard" id="stats-dashboard">
+                    <div class="stat-item">
+                        <span class="stat-label">Games</span>
+                        <span class="stat-value" id="games-played">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Wins</span>
+                        <span class="stat-value" id="player-wins">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Losses</span>
+                        <span class="stat-value" id="player-losses">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Draws</span>
+                        <span class="stat-value" id="player-draws">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Streak</span>
+                        <span class="stat-value" id="win-streak">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Best</span>
+                        <span class="stat-value" id="best-streak">0</span>
+                    </div>
+                </div>
+            </section>
+
+            <section class="history-container" id="history-container" aria-labelledby="history-title" hidden>
+                <div class="panel-heading">
+                    <p class="eyebrow">Recent Activity</p>
+                    <h2 id="history-title">History</h2>
+                </div>
+                <div id="history-list" class="history-list" role="log" aria-live="polite">
+                    <p class="empty-state">No completed rounds yet.</p>
+                </div>
+            </section>
+        </aside>
     </main>
 
-    <div class="overlay" id="overlay" aria-hidden="true"></div>
+    <div class="overlay" id="overlay" hidden aria-hidden="true"></div>
 
-    <div class="settings-panel" id="settings-panel" tabindex="-1" aria-hidden="true" role="dialog" aria-modal="true"
-        aria-labelledby="settings-title">
+    <section class="settings-panel" id="settings-panel" tabindex="-1" role="dialog" aria-modal="true"
+        aria-labelledby="settings-title" hidden inert>
         <div class="settings-header">
-            <h3 id="settings-title">Game Settings</h3>
-            <button type="button" class="close-settings" id="close-settings" aria-label="Close settings">×</button>
+            <div>
+                <p class="eyebrow">Customize</p>
+                <h2 id="settings-title">Game Settings</h2>
+            </div>
+            <button type="button" class="icon-button" id="close-settings" aria-label="Close settings">&times;</button>
         </div>
 
         <div class="settings-group">
             <h3>Game Mode</h3>
-            <div class="mode-options" role="group" aria-label="Game mode selection">
-                <button type="button" class="mode-btn active" data-mode="pva">Player vs AI</button>
-                <button type="button" class="mode-btn" data-mode="ava">AI vs AI</button>
+            <div class="segmented-options" role="group" aria-label="Game mode selection">
+                <button type="button" class="option-button active" data-mode="pva" aria-pressed="true">Player vs AI</button>
+                <button type="button" class="option-button" data-mode="ava" aria-pressed="false">AI vs AI</button>
+                <button type="button" class="option-button" data-mode="pvp" aria-pressed="false">Player vs Player</button>
             </div>
         </div>
 
         <div class="settings-group theme-selector-group">
-            <h3>Select your style</h3>
+            <h3>Select Your Style</h3>
             <div class="theme-options" role="group" aria-label="Theme selection">
-                <button type="button" class="theme-swatch active" data-theme="canvas" aria-label="Canvas theme">
-                    <span class="swatch-circle swatch-canvas"></span>
+                <button type="button" class="theme-swatch active" data-theme="canvas" aria-label="Canvas theme" aria-pressed="true">
+                    <span class="swatch-circle swatch-canvas" aria-hidden="true"></span>
                 </button>
-                <button type="button" class="theme-swatch" data-theme="azure" aria-label="Azure theme">
-                    <span class="swatch-circle swatch-azure"></span>
+                <button type="button" class="theme-swatch" data-theme="azure" aria-label="Azure theme" aria-pressed="false">
+                    <span class="swatch-circle swatch-azure" aria-hidden="true"></span>
                 </button>
-                <button type="button" class="theme-swatch" data-theme="aurora" aria-label="Aurora theme">
-                    <span class="swatch-circle swatch-aurora"></span>
+                <button type="button" class="theme-swatch" data-theme="aurora" aria-label="Aurora theme" aria-pressed="false">
+                    <span class="swatch-circle swatch-aurora" aria-hidden="true"></span>
                 </button>
-                <button type="button" class="theme-swatch" data-theme="solar" aria-label="Solar theme">
-                    <span class="swatch-circle swatch-solar"></span>
+                <button type="button" class="theme-swatch" data-theme="solar" aria-label="Solar theme" aria-pressed="false">
+                    <span class="swatch-circle swatch-solar" aria-hidden="true"></span>
                 </button>
-                <button type="button" class="theme-swatch" data-theme="apricot" aria-label="Apricot theme">
-                    <span class="swatch-circle swatch-apricot"></span>
+                <button type="button" class="theme-swatch" data-theme="apricot" aria-label="Apricot theme" aria-pressed="false">
+                    <span class="swatch-circle swatch-apricot" aria-hidden="true"></span>
                 </button>
-                <button type="button" class="theme-swatch" data-theme="dusk" aria-label="Dusk theme">
-                    <span class="swatch-circle swatch-dusk"></span>
+                <button type="button" class="theme-swatch" data-theme="dusk" aria-label="Dusk theme" aria-pressed="false">
+                    <span class="swatch-circle swatch-dusk" aria-hidden="true"></span>
                 </button>
-                <button type="button" class="theme-swatch" data-theme="blush" aria-label="Blush theme">
-                    <span class="swatch-circle swatch-blush"></span>
+                <button type="button" class="theme-swatch" data-theme="blush" aria-label="Blush theme" aria-pressed="false">
+                    <span class="swatch-circle swatch-blush" aria-hidden="true"></span>
                 </button>
-                <button type="button" class="theme-swatch" data-theme="vapor" aria-label="Vapor theme">
-                    <span class="swatch-circle swatch-vapor"></span>
+                <button type="button" class="theme-swatch" data-theme="vapor" aria-label="Vapor theme" aria-pressed="false">
+                    <span class="swatch-circle swatch-vapor" aria-hidden="true"></span>
                 </button>
-                <button type="button" class="theme-swatch" data-theme="abyss" aria-label="Abyss theme">
-                    <span class="swatch-circle swatch-abyss"></span>
+                <button type="button" class="theme-swatch" data-theme="abyss" aria-label="Abyss theme" aria-pressed="false">
+                    <span class="swatch-circle swatch-abyss" aria-hidden="true"></span>
                 </button>
             </div>
         </div>
 
-
-        <div class="settings-group">
+        <div class="settings-group" data-visible-modes="pva">
             <h3>AI Difficulty</h3>
-            <div class="difficulty-options" role="group" aria-label="AI difficulty">
-                <button type="button" class="difficulty-btn active" data-difficulty="easy">Easy</button>
-                <button type="button" class="difficulty-btn" data-difficulty="medium">Medium</button>
-                <button type="button" class="difficulty-btn" data-difficulty="hard">Hard</button>
+            <div class="segmented-options" role="group" aria-label="AI difficulty">
+                <button type="button" class="option-button active" data-difficulty="easy" aria-pressed="true">Easy</button>
+                <button type="button" class="option-button" data-difficulty="medium" aria-pressed="false">Medium</button>
+                <button type="button" class="option-button" data-difficulty="hard" aria-pressed="false">Hard</button>
             </div>
         </div>
 
-        <div class="settings-group">
+        <div class="settings-group" data-visible-modes="pva">
             <h3>AI Personality</h3>
-            <div class="personality-options" role="group" aria-label="AI personality selection">
-                <button type="button" class="personality-btn active" data-personality="balanced">Balanced</button>
-                <button type="button" class="personality-btn" data-personality="aggressive">Aggressive</button>
-                <button type="button" class="personality-btn" data-personality="defensive">Defensive</button>
-                <button type="button" class="personality-btn" data-personality="random">Random</button>
+            <div class="segmented-options" role="group" aria-label="AI personality selection">
+                <button type="button" class="option-button active" data-personality="balanced" aria-pressed="true">Balanced</button>
+                <button type="button" class="option-button" data-personality="aggressive" aria-pressed="false">Aggressive</button>
+                <button type="button" class="option-button" data-personality="defensive" aria-pressed="false">Defensive</button>
+                <button type="button" class="option-button" data-personality="random" aria-pressed="false">Random</button>
             </div>
         </div>
 
-        <div class="settings-group">
+        <div class="settings-group" data-visible-modes="pva">
             <h3>Player Symbol</h3>
-            <div class="symbol-options" role="group" aria-label="Choose player symbol">
-                <button type="button" class="symbol-btn active" data-symbol="X">Play as X</button>
-                <button type="button" class="symbol-btn" data-symbol="O">Play as O</button>
+            <div class="segmented-options" role="group" aria-label="Choose player symbol">
+                <button type="button" class="option-button active" data-symbol="X" aria-pressed="true">Play as X</button>
+                <button type="button" class="option-button" data-symbol="O" aria-pressed="false">Play as O</button>
             </div>
         </div>
-    </div>
+    </section>
 
-    <footer class="footer-note">Built for fast play and endless customization.</footer>
+    <footer class="footer-note">Built for quick rounds, clean focus, and saved progress.</footer>
 
-    <script src="script.js"></script>
+    <script type="module" src="script.js"></script>
 </body>
 
 </html>
